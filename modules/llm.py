@@ -171,3 +171,15 @@ def generate_response(user_text: str, image_features: str = "", chat_history: Ch
                     "slots": {"product": "", "issue": ""},
                     "reply": error_reply
                 }
+
+########################################################################
+# 为了集成 RAG 优化，改造一个LLM回复函数
+def generate_response_with_rag(user_text:str,
+                               image_features:str="",
+                               chat_history:ChatHistoryManager = None,
+                               extra_context:str=""):
+    if extra_context:
+        combined_text = f"【系统提示】请基于以下参考信息回答客户问题，不要编造。【参考信息】：\n{extra_context}\n\n【用户问题】：{user_text}"
+    else:
+        combined_text = user_text
+    return generate_response(combined_text, image_features, chat_history)
